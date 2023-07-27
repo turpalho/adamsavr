@@ -1,0 +1,8 @@
+{
+    "liveServer.settings.https": {
+    "enable": true, //set it true to enable the feature.
+    "cert": "/Users/shams/OtherProjects/Projects/Web/cardar/server.crt", //full path of the certificate
+    "key": "/Users/shams/OtherProjects/Projects/Web/cardar/server.key", //full path of the private key
+    "passphrase": "12345"
+    }
+}
