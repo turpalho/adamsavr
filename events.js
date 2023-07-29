@@ -1,8 +1,24 @@
-AFRAME.registerComponent('markerhandler', {
-    init: function() {
-        // start video at click anywhere
-        document.body.addEventListener('click', function(){
-            const video = document.querySelector('a-video');
-            video.play();
-        });
-}});
+window.onload = function() {
+    AFRAME.registerComponent("videohandler", {
+      init: function() {
+        var marker = this.el;
+
+        this.vid = document.querySelector("#vid");
+
+        marker.addEventListener(
+          "markerFound",
+          function() {
+            this.vid.play();
+          }.bind(this)
+        );
+
+        marker.addEventListener(
+          "markerLost",
+          function() {
+            this.vid.pause();
+            this.vid.currentTime = 0;
+          }.bind(this)
+        );
+      }
+    });
+};

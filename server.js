@@ -1,24 +1,16 @@
-window.onload = function() {
-    AFRAME.registerComponent("videohandler", {
-      init: function() {
-        var marker = this.el;
+const express = require('express');
+const app = express();
+const path = require('path');
 
-        this.vid = document.querySelector("#vid");
+app.set('view engine', 'html');
+app.use(express.static(path.join(__dirname, "/")));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
-        marker.addEventListener(
-          "markerFound",
-          function() {
-            this.vid.play();
-          }.bind(this)
-        );
+app.get('/', (req, res) => {
+    res.render('index');
+});
 
-        marker.addEventListener(
-          "markerLost",
-          function() {
-            this.vid.pause();
-            this.vid.currentTime = 0;
-          }.bind(this)
-        );
-      }
-    });
-};
+app.listen(8080, () => {
+    console.log("Listening on http://localhost:8080");
+});
