@@ -29,7 +29,14 @@
                     playsinline
                 ></video>
             </a-assets>
-            <a-marker type='barcode' value='7'>
+            <a-marker
+                videohandler
+                smooth="true"
+                smoothount="10"
+                smoothtolerance="0.01"
+                smooththreshold="5"
+                type='barcode'
+                value='7'>
                 <a-video src="#vid" rotation="-90 0 0" position="50 150 -100" width="300" height="175"></a-video>
             </a-marker>
             <a-entity camera></a-entity>
