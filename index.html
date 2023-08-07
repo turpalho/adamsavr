@@ -14,26 +14,34 @@
             AFRAME.registerComponent('registerevents', {
                 init: function() {
                     var marker = this.el;
+                    var vid = document.getElementById('watchVideo');
+                    var videoPosition = 0;
+                    var videoEnded = false; // Переменная для хранения информации о завершении видео
 
-                    // Element emits events when found and lost
                     marker.setAttribute('emitevents', 'true');
 
                     marker.addEventListener('markerFound', function() {
-                        // Alright, a marker has been found. Let's get the video element
-                        var vid = document.getElementById('waterVideo');
-
-                        // Make sure that the video a-frame object is visible
                         document.querySelector('#water').setAttribute('visible', true);
 
-                        // Reset the video to the beginning and play it through
-                        vid.currentTime = 0;
-                        vid.play();
+                        if (!videoEnded) {
+                            vid.currentTime = videoPosition;
+                            vid.play();
 
-                        // Once the video has completed, we're going to hide the a-video element
-                        // which will display the a-image element with the watch behind it
-                        vid.addEventListener('ended', function(e) {
+                            vid.addEventListener('ended', function(e) {
+                                videoEnded = true; // Устанавливаем флаг о завершении видео
+                                document.querySelector('#water').setAttribute('visible', false);
+                            });
+                        }
+                        else {
                             document.querySelector('#water').setAttribute('visible', false);
-                        });
+                        }
+                    });
+
+                    marker.addEventListener('markerLost', function() {
+                        if (!videoEnded) {
+                            videoPosition = vid.currentTime;
+                            vid.pause();
+                        }
                     });
                 }
             });
@@ -42,12 +50,46 @@
     <body style='margin : 0px; overflow: hidden;'>
         <a-scene embedded arjs="" artoolkit="">
             <a-assets timeout="10000">
-                <img id="watchImage" src="/img/code.png">
-                <video id="waterVideo" loop="false" autoplay="false" src="video.mp4" preload="auto"></video>
+                <img id="watchLogo" src="/img/techLogo2.png">
+                <img id="watchBanner" src="/img/technoDom.png">
+                <img id="watchNumber" src="/img/number.png">
+                <video id="watchVideo" loop="false" src="video/diviVid.mp4"></video>
             </a-assets>
             <a-marker preset="hiro" registerevents>
-                <a-image id="watch" src="#watchImage" height="2" width="1" position="0 1 0"></a-image>
-                <a-video id="water" src="#waterVideo" position="50 150 -100" width="300" height="175" autoplay="false"></a-video>
+                <a-image
+                        id="watch"
+                        src="#watchLogo"
+                        position="0 0 -0.9"
+                        rotation="-90 180 180"
+                        width="1"
+                        height="0.4"
+                        ></a-image>
+
+                <a-image
+                        id="watch"
+                        src="#watchBanner"
+                        position="0 0 0"
+                        rotation="-90 180 180"
+                        width="1.3"
+                        height="1.3"
+                        ></a-image>
+
+                <a-image
+                        id="watch"
+                        src="#watchNumber"
+                        position="-1 0 0"
+                        rotation="-90 180 180"
+                        width="0.4"
+                        height="1.3"
+                        ></a-image>
+
+                <a-video
+                        id="water"
+                        src="#watchVideo"
+                        position='0 0.1 0'
+                        rotation='90 0 180'
+                        width='1.3'
+                        height='1.3'></a-video>
             </a-marker>
             <a-entity camera></a-entity>
         </a-scene>
