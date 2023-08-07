@@ -2,18 +2,16 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <!-- <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+        <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
         <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script> -->
-        <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <meta name="apple-mobile-web-app-capable" content="yes">
 
         <!-- <script src="./events.js"></script> -->
         <script>
             // We're going to register a custom event listener through a-frame that will fire
             // whenever a marker has entered the camera view and is found through ar.js
-            AFRAME.registerComponent('registerevents', {
+            AFRAME.registerComponent('videohandler', {
                 init: function() {
                     var marker = this.el;
                     var vid = document.getElementById('watchVideo');
@@ -50,14 +48,16 @@
         </script>
     </head>
     <body style='margin : 0px; overflow: hidden;'>
-        <a-scene embedded arjs="" artoolkit="">
+        <a-scene vr-mode-ui="enabled: false;"
+        renderer='antialias: true; alpha: true; precision: medium;'
+        embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
             <a-assets timeout="10000">
                 <img id="watchLogo" src="img/techLogo2.png">
                 <img id="watchBanner" src="img/technoDom.png">
                 <img id="watchNumber" src="img/number.png">
                 <video id="watchVideo" loop="false" src="video/diviVid.mp4"></video>
             </a-assets>
-            <!-- <a-marker preset="hiro" registerevents>
+            <a-marker type="pattern" preset="custom" url="https://github.com/turpalho/adamsavr/blob/main/img/techLogo.patt" registerevents>
                 <a-image
                         id="watch"
                         src="#watchLogo"
@@ -92,43 +92,16 @@
                         rotation='90 0 180'
                         width='3'
                         height='3'></a-video>
-            </a-marker> -->
-            <a-nft
+            </a-marker>
+            <!-- <a-nft
+                videohandler
                 type="nft"
                 url="https://github.com/turpalho/adamsavr/tree/main/nft/iframe"
                 smooth="true"
                 smoothCount="10"
                 smoothTolerance=".01"
                 smoothThreshold="5"
-                registerevents
                 >
-                <a-image
-                        id="watch"
-                        src="#watchLogo"
-                        position="0 0 -2.3"
-                        rotation="-90 180 180"
-                        width="1.8"
-                        height="0.7"
-                        ></a-image>
-
-                <a-image
-                        id="watch"
-                        src="#watchBanner"
-                        position="0 0 0"
-                        rotation="-90 180 180"
-                        width="3"
-                        height="3"
-                        ></a-image>
-
-                <a-image
-                        id="watch"
-                        src="#watchNumber"
-                        position="-2.3 0 0"
-                        rotation="-90 180 180"
-                        width="1"
-                        height="3"
-                        ></a-image>
-
                 <a-video
                         id="water"
                         src="#watchVideo"
@@ -136,7 +109,7 @@
                         rotation='90 0 180'
                         width='3'
                         height='3'></a-video>
-            </a-nft>
+            </a-nft> -->
             <a-entity camera></a-entity>
         </a-scene>
     </body>
