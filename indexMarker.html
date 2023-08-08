@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- <script src="./events.js"></script> -->
+        <script>
+
+            var videoEnded = false; // Переменная для хранения информации о завершении видео
+            var reseter = document.getElementById('reseter');
+
+            AFRAME.registerComponent('registerevents', {
+                init: function() {
+                    var marker = this.el;
+                    var vid = document.getElementById('watchVideo');
+                    var videoPosition = 0;
+
+                    marker.setAttribute('emitevents', 'true');
+
+                    marker.addEventListener('markerFound', function() {
+                        document.querySelector('#water').setAttribute('visible', true);
+
+                        if (!videoEnded) {
+                            vid.currentTime = videoPosition;
+                            vid.play();
+
+                            vid.addEventListener('ended', function(e) {
+                                videoEnded = true; // Устанавливаем флаг о завершении видео
+                                document.querySelector('#water').setAttribute('visible', false);
+                                document.querySelector('#reseter').setAttribute('visible', true);
+                                // enableClicker();
+                            });
+                        }
+                        else {
+                            document.querySelector('#water').setAttribute('visible', false);
+                            document.querySelector('#reseter').setAttribute('visible', true);
+                            // enableClicker();
+                        }
+                    });
+
+                    marker.addEventListener('markerLost', function() {
+                        if (!videoEnded) {
+                            videoPosition = vid.currentTime;
+                            vid.pause();
+                        }
+                    });
+                }
+            });
+
+            reseter.addEventListener('click', function() {
+                console.log("Click");
+            });
+            // function enableClicker() {
+            //     var clickerEl = document.querySelector('[clicker]');
+            //     if (clickerEl) {
+            //         clickerEl.addEventListener('click', function(e) {
+            //             console.log("Click");
+            //         });
+            //     }
+            // }
+        </script>
+    </head>
+    <body style='margin : 0px; overflow: hidden;'>
+        <div id="watch3-container" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+            <img class="reseter" id="reseter" src="img/ResetIcon.png"
+            ></img>
+        </div>
+        <a-scene
+            vr-mode-ui="enabled: false"
+            arjs='sourceType: webcam; debugUIEnabled: false;'
+            raycaster='near: 0; far: 50000'
+            embedded
+            >
+            <a-assets timeout="10000">
+                <img id="watchLogo" src="img/techLogo2.png">
+                <img id="watchBanner" src="img/technoDom.png">
+                <img id="watchNumber" src="img/number.png">
+                <!-- <img id="watchReset" src="img/ResetIcon.png"> -->
+                <video id="watchVideo" loop="false" src="video/diviVid.mp4"></video>
+            </a-assets>
+            <a-marker
+                registerevents
+                preset="hiro"
+                >
+                <a-image
+                        id="watch"
+                        src="#watchLogo"
+                        position="0 0 -0.9"
+                        rotation="-90 180 180"
+                        width="1"
+                        height="0.33"
+                        ></a-image>
+
+                <a-image
+                        id="watch1"
+                        src="#watchBanner"
+                        position="0 0 0"
+                        rotation="-90 180 180"
+                        width="1.3"
+                        height="1.3"
+                        ></a-image>
+
+                <a-image
+                        id="watch2"
+                        src="#watchNumber"
+                        position="-1 0 0"
+                        rotation="-90 180 180"
+                        width="0.36"
+                        height="1.3"
+                        ></a-image>
+
+                <!-- <a-image
+                        id="watch3"
+                        src="#watchReset"
+                        position="1 0 -0.5"
+                        rotation="-90 180 180"
+                        width="0.3"
+                        height="0.3"
+                        cursor="rayOrigin: mouse"
+                        emitevents="true"
+                        clicker
+                        ></a-image> -->
+
+                <a-video
+                        id="water"
+                        src="#watchVideo"
+                        position='0 0.1 0'
+                        rotation='90 0 180'
+                        width='1.3'
+                        height='1.3'></a-video>
+            </a-marker>
+            <a-entity camera cursor="rayOrigin: mouse;"></a-entity>
+        </a-scene>
+    </body>
+</html>

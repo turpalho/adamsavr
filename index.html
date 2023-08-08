@@ -2,22 +2,23 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
-        <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <!-- <script src="https://rawgit.com/nicolocarpignoli/nicolocarpignoli.github.io/master/ar-click-events/events.js"></script> -->
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+        <link rel="stylesheet" href="css/style.css">
 
         <!-- <script src="./events.js"></script> -->
         <script>
-            // We're going to register a custom event listener through a-frame that will fire
-            // whenever a marker has entered the camera view and is found through ar.js
+
+            var videoEnded = false; // Переменная для хранения информации о завершении видео
+            var reseter = document.getElementById('reseter');
+
             AFRAME.registerComponent('registerevents', {
                 init: function() {
                     var marker = this.el;
                     var vid = document.getElementById('watchVideo');
                     var videoPosition = 0;
-                    var videoEnded = false; // Переменная для хранения информации о завершении видео
 
                     marker.setAttribute('emitevents', 'true');
 
@@ -31,10 +32,14 @@
                             vid.addEventListener('ended', function(e) {
                                 videoEnded = true; // Устанавливаем флаг о завершении видео
                                 document.querySelector('#water').setAttribute('visible', false);
+                                document.querySelector('#reseter').setAttribute('visible', true);
+                                // enableClicker();
                             });
                         }
                         else {
                             document.querySelector('#water').setAttribute('visible', false);
+                            document.querySelector('#reseter').setAttribute('visible', true);
+                            // enableClicker();
                         }
                     });
 
@@ -44,26 +49,45 @@
                             vid.pause();
                         }
                     });
-
-                    marker.addEventListener('click', function(ev, target){
-                        if (videoEnded) {
-                                vid.currentTime = 0;
-                                vid.play();
-                        }
-                    });
                 }
             });
+
+            reseter.addEventListener('click', function() {
+                console.log("Click");
+            });
+            // function enableClicker() {
+            //     var clickerEl = document.querySelector('[clicker]');
+            //     if (clickerEl) {
+            //         clickerEl.addEventListener('click', function(e) {
+            //             console.log("Click");
+            //         });
+            //     }
+            // }
         </script>
     </head>
     <body style='margin : 0px; overflow: hidden;'>
-        <a-scene embedded arjs="" artoolkit="">
+        <a-scene
+            vr-mode-ui="enabled: false;"
+            renderer="logarithmicDepthBuffer: true;"
+            embedded
+            arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+            >
             <a-assets timeout="10000">
                 <img id="watchLogo" src="img/techLogo2.png">
                 <img id="watchBanner" src="img/technoDom.png">
                 <img id="watchNumber" src="img/number.png">
+                <!-- <img id="watchReset" src="img/ResetIcon.png"> -->
                 <video id="watchVideo" loop="false" src="video/diviVid.mp4"></video>
             </a-assets>
-            <a-marker registerevents preset="hiro">
+            <a-nft
+                registerevents
+                type="nft"
+                url="nft/lagerCard"
+                smooth="true"
+                smoothCount="10"
+                smoothTolerance=".01"
+                smoothThreshold="5"
+                >
                 <a-image
                         id="watch"
                         src="#watchLogo"
@@ -74,7 +98,7 @@
                         ></a-image>
 
                 <a-image
-                        id="watch"
+                        id="watch1"
                         src="#watchBanner"
                         position="0 0 0"
                         rotation="-90 180 180"
@@ -83,7 +107,7 @@
                         ></a-image>
 
                 <a-image
-                        id="watch"
+                        id="watch2"
                         src="#watchNumber"
                         position="-1 0 0"
                         rotation="-90 180 180"
@@ -91,14 +115,26 @@
                         height="1.3"
                         ></a-image>
 
+                <!-- <a-image
+                        id="watch3"
+                        src="#watchReset"
+                        position="1 0 -0.5"
+                        rotation="-90 180 180"
+                        width="0.3"
+                        height="0.3"
+                        cursor="rayOrigin: mouse"
+                        emitevents="true"
+                        clicker
+                        ></a-image> -->
+
                 <a-video
                         id="water"
                         src="#watchVideo"
-                        position='0 0.1 0'
+                        position='0 0 0'
                         rotation='90 0 180'
-                        width='1.3'
-                        height='1.3'></a-video>
-            </a-marker>
+                        width='0.3'
+                        height='0.3'></a-video>
+            </a-nft>
             <a-entity camera></a-entity>
         </a-scene>
     </body>

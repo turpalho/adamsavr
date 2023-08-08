@@ -14,3 +14,7 @@
     opacity: 1;
     transition: opacity 2s ease-out;
 } */
+
+#reseter {
+    visibility: hidden;
+}
