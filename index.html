@@ -1,86 +1,160 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="eng">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
+    <link rel="stylesheet" href="css/style.css" />
+
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const sceneEl = document.querySelector('a-scene');
-        const arSystem = sceneEl.systems["mindar-image-system"];
+      document.addEventListener("DOMContentLoaded", function () {
+        const buttonOne = document.getElementById("buttonOne");
+        const buttonTwo = document.getElementById("buttonTwo");
+        const buttonThree = document.getElementById("buttonThree");
 
-        const examplePlane = document.querySelector('#example-plane');
-        examplePlane.addEventListener("click", event => {
-          window.open("https://t.me/technodom_95")
+        buttonOne.addEventListener("click", () => {
+          window.location.href = "tel:89280153617"; // Переход на звонок
         });
 
-        // MARKER found
-        const marker = document.querySelector('#registerevents');
-
-        marker.addEventListener('targetFound', function() {
-            var videoEnded = false; // Переменная для хранения информации о завершении видео
-            var videoPosition = 0;
-            var vid = document.getElementById('watchVideo');
-
-            document.querySelector('#water').setAttribute('visible', true);
-            console.log("Found");
-
-            if (!videoEnded) {
-                console.log("Play");
-                vid.currentTime = videoPosition;
-                vid.play();
-
-                vid.addEventListener('ended', function(e) {
-                    videoEnded = true; // Устанавливаем флаг о завершении видео
-                    setTimeout(()=>{
-                      document.querySelector('#water').setAttribute('visible', false);
-                    },500)
-                    setTimeout(()=>{
-                      document.querySelector('#banner').setAttribute('visible', true);
-                    },500)
-                });
-            }
-            else {
-                document.querySelector('#water').setAttribute('visible', false);
-            }
+        buttonTwo.addEventListener("click", () => {
+          window.open("https://t.me/technodom_95", "_blank"); // Открыть ссылку в новой вкладке
         });
 
-        marker.addEventListener('targetLost', function() {
-            if (!videoEnded) {
-                console.log("Pause");
-                videoPosition = vid.currentTime;
-                vid.pause();
-            }
+        buttonThree.addEventListener("click", () => {
+          window.open("https://t.me/technodom_95", "_blank"); // Открыть ссылку в новой вкладке
+        });
+
+        // Отслеживание маркера
+        const marker = document.querySelector("#registerevents");
+
+        marker.addEventListener("targetFound", function () {
+          var videoEnded = false; // Переменная для хранения информации о завершении видео
+          var videoPosition = 0;
+          var vid = document.getElementById("watchVideo");
+
+          document.querySelector("#water").setAttribute("visible", true);
+          console.log("Found");
+
+          if (!videoEnded) {
+            console.log("Play");
+            vid.currentTime = videoPosition;
+            vid.play();
+
+            vid.addEventListener("ended", function (e) {
+              videoEnded = true; // Устанавливаем флаг о завершении видео
+              setTimeout(() => {
+                document.querySelector("#water").setAttribute("visible", false);
+              }, 500);
+              setTimeout(() => {
+                document.querySelector("#banner").setAttribute("visible", true);
+              }, 500);
+            });
+          } else {
+            document.querySelector("#water").setAttribute("visible", false);
+          }
+        });
+
+        marker.addEventListener("targetLost", function () {
+          if (!videoEnded) {
+            console.log("Pause");
+            videoPosition = vid.currentTime;
+            vid.pause();
+          }
         });
       });
-  </script>
+    </script>
   </head>
+
   <body>
-    <a-scene mindar-image="imageTargetSrc: ./img/techNo.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene
+      mindar-image="imageTargetSrc: ./img/techNo.mind;"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
       <a-assets>
-        <img id="watchLogo" src="img/techLogo2.png">
-        <img id="watchBanner" src="img/technoDom.png">
-        <img id="watchNumber" src="img/number.png">
-        <img id="watchTelegram" src="img/TelegramIcon.png">
+        <img id="watchLogo" src="img/techLogo2.png" />
+        <img id="watchBanner" src="img/technoDom.png" />
+        <img id="watchNumber" src="img/number.png" />
         <video id="watchVideo" src="video/diviVid.mp4"></video>
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
+      <a-camera
+        position="0 0 0"
+        look-controls="enabled: false"
+        cursor="fuse: false; rayOrigin: mouse;"
+        raycaster="far: ${customFields.libVersion}; objects: .clickable"
+      ></a-camera>
 
-      <a-entity registerevents id="registerevents" mindar-image-target="targetIndex: 0">
-        <a-image src="#watchLogo"  position="0 0.8 0" height="0.33" width="1" rotation="0 0 0"></a-image>
-        <a-image src="#watchBanner" id="banner" visible="false" position="0 0 0.2" height="1" width="1" rotation="0 0 0"></a-image>
-        <a-image src="#watchNumber" position="-0.8 0 0" height="1" width="0.36" rotation="0 0 0"></a-image>
-        <a-image src="#watchTelegram" id="example-plane" class="clickable" position="0.8 0.35 0" height="0.3" width="0.3" rotation="0 0 0"></a-image>
+      <a-entity
+        registerevents
+        id="registerevents"
+        mindar-image-target="targetIndex: 0"
+      >
+        <a-image
+          src="#watchLogo"
+          position="0 0.8 0"
+          height="0.33"
+          width="1"
+          rotation="0 0 0"
+        ></a-image>
+        <a-image
+          src="#watchBanner"
+          id="banner"
+          visible="false"
+          position="0 0 0.2"
+          height="1"
+          width="1"
+          rotation="0 0 0"
+        ></a-image>
+        <a-image
+          src="#watchNumber"
+          position="-0.8 0 0"
+          height="1"
+          width="0.36"
+          rotation="0 0 0"
+        ></a-image>
         <a-video
-            id="water"
-            src="#watchVideo"
-            position='0 0 0.2'
-            rotation='0 0 0'
-            width='1'
-            height='1'></a-video>
+          id="water"
+          src="#watchVideo"
+          position="0 0 0.2"
+          rotation="0 0 0"
+          width="1"
+          height="1"
+        ></a-video>
       </a-entity>
     </a-scene>
+
+    <div class="menu">
+      <div id="holder">
+        <div id="icon">
+          <img id="iconImg" src="img/MenuBtn.png" alt="" tabindex="0" />
+        </div>
+        <div id="bar"></div>
+        <img
+          id="buttonOne"
+          class="buttons"
+          src="img/PhoneIcon.png"
+          alt=""
+          data-action="call"
+        />
+        <img
+          id="buttonTwo"
+          class="buttons"
+          src="img/WebSiteIcon.png"
+          alt=""
+          data-action="telegram"
+        />
+        <img
+          id="buttonThree"
+          class="buttons"
+          src="img/TelegramIcon.png"
+          alt=""
+          data-action="website"
+        />
+      </div>
+    </div>
   </body>
 </html>

@@ -1,20 +1,65 @@
-.name
-{
-    color: white;
-    text-align: center;
+body{
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.menu
-{
-    color: white;
-    text-align: center;
+.buttons {
+    opacity: 0;
+    position: absolute;
+    height: 60px;
 }
 
-/* #water {
-    opacity: 1;
-    transition: opacity 2s ease-out;
-} */
+#buttonOne {
+    bottom: 20px;
+}
 
-#reseter {
-    visibility: hidden;
+#buttonTwo {
+    bottom: 100px;
+}
+
+#buttonThree {
+    bottom: 180px;
+}
+
+#holder {
+    position: relative;
+    width: 100px;
+    height: 0px;
+    z-index: 9999;
+    margin-top: 80vh;
+}
+
+#bar {
+    width: 100px;
+    height: 300px;
+    margin-left: 0px;
+    flex-grow: 1;
+}
+
+#iconImg {
+    width: 60px;
+    transition: transform 1s ease-in-out;
+}
+
+#holder:focus-within > .buttons {
+    animation: iconsUp 2.5s;
+    animation-fill-mode: forwards;
+}
+
+#iconImg:focus {
+    outline: none;
+    transform: rotate(-45deg);
+}
+
+@keyframes iconsUp {
+    40%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
 }
