@@ -6,59 +6,57 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const sceneEl = document.querySelector('a-scene');
+        const arSystem = sceneEl.systems["mindar-image-system"];
 
-      var videoEnded = false; // Переменная для хранения информации о завершении видео
-      var reseter = document.getElementById('reseter');
+        const examplePlane = document.querySelector('#example-plane');
+        examplePlane.addEventListener("click", event => {
+          window.open("https://t.me/technodom_95")
+        });
 
-      AFRAME.registerComponent('registerevents', {
-          init: function() {
-              var marker = this.el;
-              var vid = document.getElementById('watchVideo');
-              var videoPosition = 0;
+        // var videoEnded = false; // Переменная для хранения информации о завершении видео
+        // var reseter = document.getElementById('reseter');
 
-              marker.setAttribute('emitevents', 'true');
 
-              marker.addEventListener('markerFound', function() {
-                  document.querySelector('#water').setAttribute('visible', true);
+        // AFRAME.registerComponent('registerevents', {
+        //     init: function() {
+        //         var marker = this.el;
+        //         var vid = document.getElementById('watchVideo');
+        //         var videoPosition = 0;
 
-                  if (!videoEnded) {
-                      vid.currentTime = videoPosition;
-                      vid.play();
+        //         marker.setAttribute('emitevents', 'true');
 
-                      vid.addEventListener('ended', function(e) {
-                          videoEnded = true; // Устанавливаем флаг о завершении видео
-                          document.querySelector('#water').setAttribute('visible', false);
-                          document.querySelector('#reseter').setAttribute('visible', true);
-                          // enableClicker();
-                      });
-                  }
-                  else {
-                      document.querySelector('#water').setAttribute('visible', false);
-                      document.querySelector('#reseter').setAttribute('visible', true);
-                      // enableClicker();
-                  }
-              });
+        //         marker.addEventListener('markerFound', function() {
+        //             document.querySelector('#water').setAttribute('visible', true);
 
-              marker.addEventListener('markerLost', function() {
-                  if (!videoEnded) {
-                      videoPosition = vid.currentTime;
-                      vid.pause();
-                  }
-              });
-          }
+        //             if (!videoEnded) {
+        //                 vid.currentTime = videoPosition;
+        //                 vid.play();
+
+        //                 vid.addEventListener('ended', function(e) {
+        //                     videoEnded = true; // Устанавливаем флаг о завершении видео
+        //                     document.querySelector('#water').setAttribute('visible', false);
+        //                     document.querySelector('#reseter').setAttribute('visible', true);
+        //                     // enableClicker();
+        //                 });
+        //             }
+        //             else {
+        //                 document.querySelector('#water').setAttribute('visible', false);
+        //                 document.querySelector('#reseter').setAttribute('visible', true);
+        //                 // enableClicker();
+        //             }
+        //         });
+
+        //         marker.addEventListener('markerLost', function() {
+        //             if (!videoEnded) {
+        //                 videoPosition = vid.currentTime;
+        //                 vid.pause();
+        //             }
+        //         });
+        //     }
+        // });
       });
-
-      reseter.addEventListener('click', function() {
-          console.log("Click");
-      });
-      // function enableClicker() {
-      //     var clickerEl = document.querySelector('[clicker]');
-      //     if (clickerEl) {
-      //         clickerEl.addEventListener('click', function(e) {
-      //             console.log("Click");
-      //         });
-      //     }
-      // }
   </script>
   </head>
   <body>
@@ -67,16 +65,18 @@
         <img id="watchLogo" src="img/techLogo2.png">
         <img id="watchBanner" src="img/technoDom.png">
         <img id="watchNumber" src="img/number.png">
+        <img id="watchTelegram" src="img/TelegramIcon.png">
         <video id="watchVideo" src="./video.mp4"></video>
         <!-- <a-asset-item id="avatarModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/image-tracking/assets/card-example/softmind/scene.gltf"></a-asset-item> -->
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
 
-      <a-entity registerevents mindar-image-target="targetIndex: 0">
-        <a-image src="#watchLogo" position="0 0.8 0" height="0.33" width="1" rotation="0 0 0"></a-image>
+      <a-entity registerevents class="registerevents" mindar-image-target="targetIndex: 0">
+        <a-image src="#watchLogo"  position="0 0.8 0" height="0.33" width="1" rotation="0 0 0"></a-image>
         <a-image src="#watchBanner" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-image>
         <a-image src="#watchNumber" position="-0.8 0 0" height="1" width="0.36" rotation="0 0 0"></a-image>
+        <a-image src="#watchTelegram" id="example-plane" class="clickable" position="0.8 0.35 0" height="0.3" width="0.3" rotation="0 0 0"></a-image>
         <!-- <a-video
             id="water"
             src="#watchVideo"
