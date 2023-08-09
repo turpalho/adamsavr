@@ -1,141 +1,90 @@
-<!DOCTYPE html>
+
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
-        <link rel="stylesheet" href="css/style.css">
+    <script>
 
-        <!-- <script src="./events.js"></script> -->
-        <script>
+      var videoEnded = false; // Переменная для хранения информации о завершении видео
+      var reseter = document.getElementById('reseter');
 
-            var videoEnded = false; // Переменная для хранения информации о завершении видео
-            var reseter = document.getElementById('reseter');
+      AFRAME.registerComponent('registerevents', {
+          init: function() {
+              var marker = this.el;
+              var vid = document.getElementById('watchVideo');
+              var videoPosition = 0;
 
-            AFRAME.registerComponent('registerevents', {
-                init: function() {
-                    var marker = this.el;
-                    var vid = document.getElementById('watchVideo');
-                    var videoPosition = 0;
+              marker.setAttribute('emitevents', 'true');
 
-                    marker.setAttribute('emitevents', 'true');
+              marker.addEventListener('markerFound', function() {
+                  document.querySelector('#water').setAttribute('visible', true);
 
-                    marker.addEventListener('markerFound', function() {
-                        document.querySelector('#water').setAttribute('visible', true);
+                  if (!videoEnded) {
+                      vid.currentTime = videoPosition;
+                      vid.play();
 
-                        if (!videoEnded) {
-                            vid.currentTime = videoPosition;
-                            vid.play();
+                      vid.addEventListener('ended', function(e) {
+                          videoEnded = true; // Устанавливаем флаг о завершении видео
+                          document.querySelector('#water').setAttribute('visible', false);
+                          document.querySelector('#reseter').setAttribute('visible', true);
+                          // enableClicker();
+                      });
+                  }
+                  else {
+                      document.querySelector('#water').setAttribute('visible', false);
+                      document.querySelector('#reseter').setAttribute('visible', true);
+                      // enableClicker();
+                  }
+              });
 
-                            vid.addEventListener('ended', function(e) {
-                                videoEnded = true; // Устанавливаем флаг о завершении видео
-                                document.querySelector('#water').setAttribute('visible', false);
-                                document.querySelector('#reseter').setAttribute('visible', true);
-                                // enableClicker();
-                            });
-                        }
-                        else {
-                            document.querySelector('#water').setAttribute('visible', false);
-                            document.querySelector('#reseter').setAttribute('visible', true);
-                            // enableClicker();
-                        }
-                    });
+              marker.addEventListener('markerLost', function() {
+                  if (!videoEnded) {
+                      videoPosition = vid.currentTime;
+                      vid.pause();
+                  }
+              });
+          }
+      });
 
-                    marker.addEventListener('markerLost', function() {
-                        if (!videoEnded) {
-                            videoPosition = vid.currentTime;
-                            vid.pause();
-                        }
-                    });
-                }
-            });
+      reseter.addEventListener('click', function() {
+          console.log("Click");
+      });
+      // function enableClicker() {
+      //     var clickerEl = document.querySelector('[clicker]');
+      //     if (clickerEl) {
+      //         clickerEl.addEventListener('click', function(e) {
+      //             console.log("Click");
+      //         });
+      //     }
+      // }
+  </script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: ./img/techNo.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <img id="watchLogo" src="img/techLogo2.png">
+        <img id="watchBanner" src="img/technoDom.png">
+        <img id="watchNumber" src="img/number.png">
+        <video id="watchVideo" src="./video.mp4"></video>
+        <!-- <a-asset-item id="avatarModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/image-tracking/assets/card-example/softmind/scene.gltf"></a-asset-item> -->
+      </a-assets>
 
-            reseter.addEventListener('click', function() {
-                console.log("Click");
-            });
-            // function enableClicker() {
-            //     var clickerEl = document.querySelector('[clicker]');
-            //     if (clickerEl) {
-            //         clickerEl.addEventListener('click', function(e) {
-            //             console.log("Click");
-            //         });
-            //     }
-            // }
-        </script>
-    </head>
-    <body style='margin : 0px; overflow: hidden;'>
-        <a-scene
-            vr-mode-ui="enabled: false;"
-            renderer="logarithmicDepthBuffer: true;"
-            embedded
-            arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
-            >
-            <a-assets timeout="10000">
-                <img id="watchLogo" src="img/techLogo2.png">
-                <img id="watchBanner" src="img/technoDom.png">
-                <img id="watchNumber" src="img/number.png">
-                <!-- <img id="watchReset" src="img/ResetIcon.png"> -->
-                <video id="watchVideo" loop="false" src="video/diviVid.mp4"></video>
-            </a-assets>
-            <a-nft
-                registerevents
-                type="nft"
-                url="nft/lagerCard"
-                smooth="true"
-                smoothCount="10"
-                smoothTolerance=".01"
-                smoothThreshold="5"
-                >
-                <a-image
-                        id="watch"
-                        src="#watchLogo"
-                        position="0 0 -0.9"
-                        rotation="-90 180 180"
-                        width="1"
-                        height="0.33"
-                        ></a-image>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-                <a-image
-                        id="watch1"
-                        src="#watchBanner"
-                        position="0 0 0"
-                        rotation="-90 180 180"
-                        width="1.3"
-                        height="1.3"
-                        ></a-image>
-
-                <a-image
-                        id="watch2"
-                        src="#watchNumber"
-                        position="-1 0 0"
-                        rotation="-90 180 180"
-                        width="0.36"
-                        height="1.3"
-                        ></a-image>
-
-                <!-- <a-image
-                        id="watch3"
-                        src="#watchReset"
-                        position="1 0 -0.5"
-                        rotation="-90 180 180"
-                        width="0.3"
-                        height="0.3"
-                        cursor="rayOrigin: mouse"
-                        emitevents="true"
-                        clicker
-                        ></a-image> -->
-
-                <a-video
-                        id="water"
-                        src="#watchVideo"
-                        position='0 0 0'
-                        rotation='90 0 180'
-                        width='0.3'
-                        height='0.3'></a-video>
-            </a-nft>
-            <a-entity camera></a-entity>
-        </a-scene>
-    </body>
+      <a-entity registerevents mindar-image-target="targetIndex: 0">
+        <a-image src="#watchLogo" position="0 0.8 0" height="0.33" width="1" rotation="0 0 0"></a-image>
+        <a-image src="#watchBanner" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-image>
+        <a-image src="#watchNumber" position="-0.8 0 0" height="1" width="0.36" rotation="0 0 0"></a-image>
+        <!-- <a-video
+            id="water"
+            src="#watchVideo"
+            position='0 0 0.2'
+            rotation='0 0 0'
+            width='1'
+            height='1'></a-video> -->
+      </a-entity>
+    </a-scene>
+  </body>
 </html>
