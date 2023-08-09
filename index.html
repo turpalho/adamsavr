@@ -15,47 +15,44 @@
           window.open("https://t.me/technodom_95")
         });
 
-        // var videoEnded = false; // Переменная для хранения информации о завершении видео
-        // var reseter = document.getElementById('reseter');
+        // MARKER found
+        const marker = document.querySelector('#registerevents');
 
+        marker.addEventListener('targetFound', function() {
+            var videoEnded = false; // Переменная для хранения информации о завершении видео
+            var videoPosition = 0;
+            var vid = document.getElementById('watchVideo');
 
-        // AFRAME.registerComponent('registerevents', {
-        //     init: function() {
-        //         var marker = this.el;
-        //         var vid = document.getElementById('watchVideo');
-        //         var videoPosition = 0;
+            document.querySelector('#water').setAttribute('visible', true);
+            console.log("Found");
 
-        //         marker.setAttribute('emitevents', 'true');
+            if (!videoEnded) {
+                console.log("Play");
+                vid.currentTime = videoPosition;
+                vid.play();
 
-        //         marker.addEventListener('markerFound', function() {
-        //             document.querySelector('#water').setAttribute('visible', true);
+                vid.addEventListener('ended', function(e) {
+                    videoEnded = true; // Устанавливаем флаг о завершении видео
+                    setTimeout(()=>{
+                      document.querySelector('#water').setAttribute('visible', false);
+                    },500)
+                    setTimeout(()=>{
+                      document.querySelector('#banner').setAttribute('visible', true);
+                    },500)
+                });
+            }
+            else {
+                document.querySelector('#water').setAttribute('visible', false);
+            }
+        });
 
-        //             if (!videoEnded) {
-        //                 vid.currentTime = videoPosition;
-        //                 vid.play();
-
-        //                 vid.addEventListener('ended', function(e) {
-        //                     videoEnded = true; // Устанавливаем флаг о завершении видео
-        //                     document.querySelector('#water').setAttribute('visible', false);
-        //                     document.querySelector('#reseter').setAttribute('visible', true);
-        //                     // enableClicker();
-        //                 });
-        //             }
-        //             else {
-        //                 document.querySelector('#water').setAttribute('visible', false);
-        //                 document.querySelector('#reseter').setAttribute('visible', true);
-        //                 // enableClicker();
-        //             }
-        //         });
-
-        //         marker.addEventListener('markerLost', function() {
-        //             if (!videoEnded) {
-        //                 videoPosition = vid.currentTime;
-        //                 vid.pause();
-        //             }
-        //         });
-        //     }
-        // });
+        marker.addEventListener('targetLost', function() {
+            if (!videoEnded) {
+                console.log("Pause");
+                videoPosition = vid.currentTime;
+                vid.pause();
+            }
+        });
       });
   </script>
   </head>
@@ -66,24 +63,23 @@
         <img id="watchBanner" src="img/technoDom.png">
         <img id="watchNumber" src="img/number.png">
         <img id="watchTelegram" src="img/TelegramIcon.png">
-        <video id="watchVideo" src="./video.mp4"></video>
-        <!-- <a-asset-item id="avatarModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/image-tracking/assets/card-example/softmind/scene.gltf"></a-asset-item> -->
+        <video id="watchVideo" src="./video/diviVid.mp4"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
 
-      <a-entity registerevents class="registerevents" mindar-image-target="targetIndex: 0">
+      <a-entity registerevents id="registerevents" mindar-image-target="targetIndex: 0">
         <a-image src="#watchLogo"  position="0 0.8 0" height="0.33" width="1" rotation="0 0 0"></a-image>
-        <a-image src="#watchBanner" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-image>
+        <a-image src="#watchBanner" id="banner" visible="false" position="0 0 0.2" height="1" width="1" rotation="0 0 0"></a-image>
         <a-image src="#watchNumber" position="-0.8 0 0" height="1" width="0.36" rotation="0 0 0"></a-image>
         <a-image src="#watchTelegram" id="example-plane" class="clickable" position="0.8 0.35 0" height="0.3" width="0.3" rotation="0 0 0"></a-image>
-        <!-- <a-video
+        <a-video
             id="water"
             src="#watchVideo"
             position='0 0 0.2'
             rotation='0 0 0'
             width='1'
-            height='1'></a-video> -->
+            height='1'></a-video>
       </a-entity>
     </a-scene>
   </body>
